@@ -1,6 +1,7 @@
 package com.newsampath.driving.school.service;
 
 import com.newsampath.driving.school.model.User;
+//import org.springframework.security.core.userdetails.User;
 import com.newsampath.driving.school.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,13 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepository.findUserName(userName).orElseThrow(()->
-                new UsernameNotFoundException("No user found"+userName));
+
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException{
+        User user = userRepository.findByUserName(userName).orElseThrow(() ->
+                        new UsernameNotFoundException("No user found"+userName));
         return new org.springframework.security.core.userdetails.User(user.getUserName(),user.getPassword(),
                 true,true,true,true,getAuthorities("ROLE_USER"));
-    }
 
+    }
     private Collection<? extends GrantedAuthority> getAuthorities(String role_user) {
         return Collections.singletonList(new SimpleGrantedAuthority(role_user));
     }
